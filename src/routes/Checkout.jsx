@@ -7,11 +7,15 @@ import useItemQuantity from '../hooks/useItemQuantity';
 
 export default function Checkout() {
   // const { itemId } = useParams();
-  const { cartItems, updateCart, isMobile } = useOutletContext();
-  const [itemQuantities, setItemQuantities] = useState(() =>
-    cartItems.reduce((acc, item) => ({ ...acc, [item.id]: item.quantity }), {}),
-  );
-  const [updatedItems, setUpdatedItems] = useState({}); // New state to track updates
+  const {
+    cartItems,
+    updateCart,
+    isMobile,
+    itemQuantities,
+    updateItemQuantity,
+  } = useOutletContext();
+
+  const [updatedItems, setUpdatedItems] = useState({});
 
   const handleSaveChanges = (itemId) => {
     updateCart(
@@ -25,21 +29,18 @@ export default function Checkout() {
     setUpdatedItems((prev) => ({ ...prev, [itemId]: false }));
   };
 
-  const handleQuantityChange = (itemId, newQuantity) => {
-    setItemQuantities((prev) => ({ ...prev, [itemId]: newQuantity }));
+  const incrementQuantity = (itemId) => {
+    const newQuantity =
+      itemQuantities[itemId] < 100 ? itemQuantities[itemId] + 1 : 100;
+    updateItemQuantity(itemId, newQuantity);
     setUpdatedItems((prev) => ({ ...prev, [itemId]: true }));
   };
 
-  const incrementQuantity = (itemId) => {
-    const currentQuantity = itemQuantities[itemId];
-    const newQuantity = currentQuantity < 100 ? currentQuantity + 1 : 100;
-    handleQuantityChange(itemId, newQuantity);
-  };
-
   const decrementQuantity = (itemId) => {
-    const currentQuantity = itemQuantities[itemId];
-    const newQuantity = currentQuantity > 1 ? currentQuantity - 1 : 1;
-    handleQuantityChange(itemId, newQuantity);
+    const newQuantity =
+      itemQuantities[itemId] > 1 ? itemQuantities[itemId] - 1 : 1;
+    updateItemQuantity(itemId, newQuantity);
+    setUpdatedItems((prev) => ({ ...prev, [itemId]: true }));
   };
 
   return (
@@ -97,7 +98,10 @@ export default function Checkout() {
                       className="flex size-8 items-center border border-gray-900 p-2"
                       value={itemQuantities[item.id]}
                       onChange={(e) =>
-                        handleQuantityChange(item.id, Number(e.target.value))
+                        updateItemQuantity(
+                          item.id,
+                          Math.max(1, Math.min(Number(e.target.value), 100)),
+                        )
                       }
                       min={1}
                       max={100}

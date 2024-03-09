@@ -5,8 +5,13 @@ import Sidebar from './Sidebar';
 import { useEffect, useRef, useState } from 'react';
 import CartSidebar from './CartSidebar';
 
-export default function Navbar({ cartItems, handleUpdateCart, isMobile }) {
-  // TODO: set a state that changes the sidebar icon when its open
+export default function Navbar({
+  cartItems,
+  handleUpdateCart,
+  isMobile,
+  handleItemQuantityUpdate,
+  itemQuantities
+}) {
   // TODO: the search icon should open a fuzzy search bar with highlighting
   //   TODO: cart icon should open cart on same page until go to checkout
   // ! TODO: sidebar like cart and carte checkout route
@@ -118,6 +123,8 @@ export default function Navbar({ cartItems, handleUpdateCart, isMobile }) {
         ref={cart}
         cartItems={cartItems}
         handleUpdateCart={handleUpdateCart}
+        itemQuantities={itemQuantities}
+        handleItemQuantityUpdate={handleItemQuantityUpdate}
         isMobile={isMobile}
         toggleCart={toggleCart}
       />

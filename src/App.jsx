@@ -13,10 +13,17 @@ function App() {
   const [cartItems, setCartItems] = useState(
     JSON.parse(localStorage.getItem('cartItems')) || [],
   );
+  const [itemQuantities, setItemQuantities] = useState(() =>
+    cartItems.reduce((acc, item) => ({ ...acc, [item.id]: item.quantity }), {}),
+  );
 
   useEffect(() => {
     localStorage.setItem('cartItems', JSON.stringify(cartItems));
   }, [cartItems]);
+
+  const updateItemQuantity = (itemId, newQuantity) => {
+    setItemQuantities((prev) => ({ ...prev, [itemId]: newQuantity }));
+  };
 
   const updateCart = (newItem, quantity, isAdding = true) => {
     setCartItems((prevItems) => {
@@ -58,9 +65,19 @@ function App() {
         cartItems={cartItems}
         handleUpdateCart={updateCart}
         isMobile={isMobile}
+        itemQuantities={itemQuantities}
+        handleItemQuantityUpdate={updateItemQuantity}
       />
       <main className="h-full w-full flex-col gap-8 bg-yellow-100">
-        <Outlet context={{ updateCart, cartItems, isMobile }} />
+        <Outlet
+          context={{
+            updateCart,
+            cartItems,
+            isMobile,
+            itemQuantities,
+            updateItemQuantity,
+          }}
+        />
       </main>
       <Contact />
     </div>

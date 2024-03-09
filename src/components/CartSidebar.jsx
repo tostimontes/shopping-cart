@@ -11,14 +11,19 @@ import { mdiTrashCanOutline } from '@mdi/js';
 // TODO: decrementing to less than 1 removes item
 
 const CartSidebar = forwardRef(
-  ({ open, cartItems, handleUpdateCart, isMobile, toggleCart }, ref) => {
-    const [itemQuantities, setItemQuantities] = useState(() =>
-      cartItems.reduce(
-        (acc, item) => ({ ...acc, [item.id]: item.quantity }),
-        {},
-      ),
-    );
-    const [updatedItems, setUpdatedItems] = useState({}); // New state to track updates
+  (
+    {
+      open,
+      cartItems,
+      handleUpdateCart,
+      isMobile,
+      toggleCart,
+      itemQuantities,
+      handleItemQuantityUpdate,
+    },
+    ref,
+  ) => {
+    const [updatedItems, setUpdatedItems] = useState({});
 
     const handleSaveChanges = (itemId) => {
       handleUpdateCart(
@@ -32,21 +37,18 @@ const CartSidebar = forwardRef(
       setUpdatedItems((prev) => ({ ...prev, [itemId]: false }));
     };
 
-    const handleQuantityChange = (itemId, newQuantity) => {
-      setItemQuantities((prev) => ({ ...prev, [itemId]: newQuantity }));
+    const incrementQuantity = (itemId) => {
+      const newQuantity =
+        itemQuantities[itemId] < 100 ? itemQuantities[itemId] + 1 : 100;
+      handleItemQuantityUpdate(itemId, newQuantity);
       setUpdatedItems((prev) => ({ ...prev, [itemId]: true }));
     };
 
-    const incrementQuantity = (itemId) => {
-      const currentQuantity = itemQuantities[itemId];
-      const newQuantity = currentQuantity < 100 ? currentQuantity + 1 : 100;
-      handleQuantityChange(itemId, newQuantity);
-    };
-
     const decrementQuantity = (itemId) => {
-      const currentQuantity = itemQuantities[itemId];
-      const newQuantity = currentQuantity > 1 ? currentQuantity - 1 : 1;
-      handleQuantityChange(itemId, newQuantity);
+      const newQuantity =
+        itemQuantities[itemId] > 1 ? itemQuantities[itemId] - 1 : 1;
+      handleItemQuantityUpdate(itemId, newQuantity);
+      setUpdatedItems((prev) => ({ ...prev, [itemId]: true }));
     };
 
     const handleToggleCart = () => {
@@ -101,9 +103,12 @@ const CartSidebar = forwardRef(
                           className="flex size-8 items-center border border-gray-900 p-2"
                           value={itemQuantities[item.id]}
                           onChange={(e) =>
-                            handleQuantityChange(
+                            handleItemQuantityUpdate(
                               item.id,
-                              Number(e.target.value),
+                              Math.max(
+                                1,
+                                Math.min(Number(e.target.value), 100),
+                              ),
                             )
                           }
                           min={1}

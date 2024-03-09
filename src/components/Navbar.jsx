@@ -3,24 +3,27 @@ import { Link } from 'react-router-dom';
 import Icon from '@mdi/react';
 import Sidebar from './Sidebar';
 import { useEffect, useRef, useState } from 'react';
+import CartSidebar from './CartSidebar';
 
-export default function Navbar() {
+export default function Navbar({ cartItems, handleUpdateCart, isMobile }) {
   // TODO: set a state that changes the sidebar icon when its open
   // TODO: the search icon should open a fuzzy search bar with highlighting
   //   TODO: cart icon should open cart on same page until go to checkout
-  // ! TODO: sidebar like cart and carte checkout route 
+  // ! TODO: sidebar like cart and carte checkout route
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isCartOpen, setIsCartOpen] = useState(false);
   const [showNavbar, setShowNavbar] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
 
   const sidebar = useRef();
   const sidebarButton = useRef();
+  const cart = useRef();
+  const cartButton = useRef();
 
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      console.log('Scroll Y: ', currentScrollY, 'Last Scroll Y: ', lastScrollY);
 
       if (currentScrollY <= lastScrollY) {
         // Scrolling up or at the top of the page
@@ -46,9 +49,13 @@ export default function Navbar() {
       if (
         sidebar.current &&
         !sidebar.current.contains(event.target) &&
-        !sidebarButton.current.contains(event.target)
+        !sidebarButton.current.contains(event.target) &&
+        cart.current &&
+        !cart.current.contains(event.target) &&
+        !cartButton.current.contains(event.target)
       ) {
         setIsSidebarOpen(false);
+        setIsCartOpen(false);
       }
     };
 
@@ -61,9 +68,18 @@ export default function Navbar() {
     };
   }, []);
 
+  const totalItemsInCart = cartItems.reduce((totalItems, curr) => {
+    return (totalItems += curr.quantity);
+  }, 0);
+
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
+
+  const toggleCart = () => {
+    setIsCartOpen(!isCartOpen);
+  };
+
   return (
     <>
       <nav
@@ -82,9 +98,29 @@ export default function Navbar() {
           <h1 className="text-4xl text-yellow-300 ">AliBrava</h1>
         </Link>
         <Icon path={mdiAccount} size={1} />
-        <Icon path={mdiCart} size={1} />
+        <button
+          type="button"
+          onClick={toggleCart}
+          ref={cartButton}
+          className="relative"
+        >
+          <Icon path={mdiCart} size={1} />
+          {totalItemsInCart > 0 && (
+            <div className="absolute -right-3 -top-3 flex size-4 items-center justify-center rounded-full bg-yellow-300 p-3  text-black">
+              {totalItemsInCart}
+            </div>
+          )}
+        </button>
       </nav>
       <Sidebar open={isSidebarOpen} ref={sidebar} />
+      <CartSidebar
+        open={isCartOpen}
+        ref={cart}
+        cartItems={cartItems}
+        handleUpdateCart={handleUpdateCart}
+        isMobile={isMobile}
+        toggleCart={toggleCart}
+      />
     </>
   );
 }

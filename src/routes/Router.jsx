@@ -3,8 +3,8 @@ import App from '../App';
 import ErrorPage from './ErrorPage';
 import Shop from './Shop';
 import Home from './Home';
-import Cart from './Cart';
 import ItemDetail from './ItemDetail';
+import Checkout from './Checkout';
 
 const Router = () => {
   const router = createBrowserRouter([
@@ -32,8 +32,8 @@ const Router = () => {
           ],
         },
         {
-          path: 'cart',
-          element: <Cart />,
+          path: 'checkout',
+          element: <Checkout />,
         },
       ],
     },

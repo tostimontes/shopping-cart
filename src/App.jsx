@@ -10,7 +10,6 @@ function App() {
   return (
     <div className="flex min-h-screen w-full flex-col">
       <Navbar />
-      <Sidebar />
       <main className="h-full w-full flex-col gap-8 bg-yellow-100">
         <Outlet />
       </main>

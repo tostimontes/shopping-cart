@@ -5,7 +5,11 @@ export default {
   presets: [],
   darkMode: 'media', // or 'class'
   theme: {
-    extend: {},
+    extend: {
+      gridAutoRows: {
+        '35rem': '35rem',
+      },
+    },
     accentColor: ({ theme }) => ({
       ...theme('colors'),
       auto: 'auto',

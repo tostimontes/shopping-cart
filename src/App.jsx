@@ -5,7 +5,8 @@ import { Outlet } from 'react-router-dom';
 import fakeResponse from './fakeResponse';
 
 function App() {
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [isLaptop, setIsLaptop] = useState(window.innerWidth >= 1024);
   const [cartItems, setCartItems] = useState(
     JSON.parse(localStorage.getItem('cartItems')) || [],
   );
@@ -30,7 +31,7 @@ function App() {
         ).json();
 
         setShopItems(data);
-        setFetchError(false); // Reset error state on successful fetch
+        setFetchError(false);
       } catch (error) {
         console.error('Failed to fetch products:', error);
         setFetchError(true);
@@ -94,7 +95,8 @@ function App() {
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth < 1024);
+      setIsMobile(window.innerWidth < 768);
+      setIsLaptop(window.innerWidth >= 1024);
     };
 
     window.addEventListener('resize', handleResize);
@@ -105,24 +107,26 @@ function App() {
   }, []);
 
   return (
-    <div className="flex min-h-screen w-full flex-col">
+    <div className="flex min-h-screen w-full flex-col bg-yellow-100">
       <Navbar
         cartItems={cartItems}
         handleUpdateCart={updateCart}
         isMobile={isMobile}
+        isLaptop={isLaptop}
         itemQuantities={itemQuantities}
         handleItemQuantityUpdate={updateItemQuantity}
         shopItems={shopItems}
         handleSearch={handleSearch}
         searchResults={searchResults}
       />
-      <main className="h-full w-full flex-col gap-8 bg-yellow-100">
+      <main className="min-h-screen w-full max-w-6xl flex-col gap-8 bg-yellow-100 xl:mx-auto">
         <Outlet
           context={{
             updateCart,
             cartItems,
-            isMobile,
             itemQuantities,
+            isLaptop,
+            isMobile,
             updateItemQuantity,
             shopItems,
             fetchError,

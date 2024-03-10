@@ -1,12 +1,11 @@
 // ItemDetail.jsx
-import { useState } from 'react';
 import { useParams, useOutletContext, Link } from 'react-router-dom';
 import Button from '../components/Button';
 import { mdiCart } from '@mdi/js';
 import useItemQuantity from '../hooks/useItemQuantity';
 
 const ItemDetail = () => {
-  const { shopItems, updateCart } = useOutletContext();
+  const { shopItems, updateCart, isMobile } = useOutletContext();
   const { itemId } = useParams();
   const {
     quantity,
@@ -24,9 +23,9 @@ const ItemDetail = () => {
 
   if (item) {
     return (
-      <div className="flex w-full flex-col justify-between gap-2 rounded-xl bg-white p-4 shadow-md">
+      <div className="mx-auto flex w-full flex-col justify-between gap-2 rounded-xl bg-white p-4 shadow-md md:w-4/6 lg:flex-row lg:items-center">
         <img
-          className="h-full rounded-xl object-contain "
+          className="h-full rounded-xl object-contain lg:h-auto lg:w-1/5 "
           src={item.image}
           alt={item.title}
         />
@@ -43,11 +42,11 @@ const ItemDetail = () => {
             <Button
               onClick={decrementQuantity}
               text="-"
-              className="size-8 rounded-full"
+              className="size-8 rounded-full md:size-12"
             />
             <input
               type="number"
-              className="flex w-12 items-center border border-gray-900 p-2 text-center"
+              className="flex w-12 items-center border border-gray-900 p-2 text-center md:w-20"
               value={inputValue}
               onChange={handleQuantityChange}
               onBlur={handleBlur}
@@ -57,7 +56,7 @@ const ItemDetail = () => {
             <Button
               onClick={incrementQuantity}
               text="+"
-              className="size-8 rounded-full"
+              className="size-8 rounded-full md:size-12"
             />
             <Button
               text="Add to cart"

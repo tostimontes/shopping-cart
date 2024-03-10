@@ -1,5 +1,4 @@
 import Icon from '@mdi/react';
-import Button from '../components/Button';
 import { mdiShopping } from '@mdi/js';
 import { Link } from 'react-router-dom';
 

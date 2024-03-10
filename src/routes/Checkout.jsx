@@ -1,12 +1,10 @@
 /* eslint-disable react/jsx-key */
-import { useOutletContext, useParams, Link } from 'react-router-dom';
+import { useOutletContext, Link } from 'react-router-dom';
 import Button from '../components/Button';
-import { mdiCart, mdiCash, mdiShopping, mdiTrashCanOutline } from '@mdi/js';
+import { mdiCash, mdiShopping, mdiTrashCanOutline } from '@mdi/js';
 import { useState } from 'react';
-import useItemQuantity from '../hooks/useItemQuantity';
 
 export default function Checkout() {
-  // const { itemId } = useParams();
   const {
     cartItems,
     updateCart,
@@ -60,7 +58,7 @@ export default function Checkout() {
       )}
 
       {cartItems.length > 0 ? (
-        <>
+        <div className="flex flex-col items-center gap-2 md:px-12">
           {cartItems.map((item) => {
             return (
               <div className="flex w-full items-center gap-2 rounded-lg bg-yellow-50 p-2">
@@ -137,7 +135,7 @@ export default function Checkout() {
               className="gap-2 bg-orange-600 p-3 text-4xl"
             />
           </div>
-        </>
+        </div>
       ) : (
         <>
           <p>Your cart is empty!</p>

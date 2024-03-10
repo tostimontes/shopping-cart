@@ -4,12 +4,11 @@ import { Link, Outlet, useLocation, useOutletContext } from 'react-router-dom';
 import Button from '../components/Button';
 import { mdiChevronDoubleLeft, mdiFilter } from '@mdi/js';
 
-// TODO: use a react router loader for the prefetch
-
 export default function Shop() {
   const location = useLocation();
   const isShopMainPage = location.pathname === '/shop';
-  const { updateCart, isMobile, shopItems, fetchError } = useOutletContext();
+  const { updateCart, isMobile, isLaptop, shopItems, fetchError } =
+    useOutletContext();
   const [selectedCategories, setSelectedCategories] = useState({});
   const [filtersVisible, setFiltersVisible] = useState(false);
 
@@ -27,8 +26,6 @@ export default function Shop() {
   const toggleFilters = () => {
     setFiltersVisible((prev) => !prev);
   };
-
-  // ... rest of the component ...
 
   const handleCategoryChange = (category) => {
     setSelectedCategories((prev) => ({
@@ -57,7 +54,9 @@ export default function Shop() {
           Failed to load products. Please try again later.
         </p>
       )}
-      <div className={`${isShopMainPage ? 'fixed' : 'absolute'} top-20 mt-2`}>
+      <div
+        className={`${isShopMainPage ? 'fixed' : 'absolute'} top-20 mt-2 md:top-24`}
+      >
         {isShopMainPage ? (
           <Button
             onClick={toggleFilters}
@@ -95,7 +94,7 @@ export default function Shop() {
       </div>
 
       {isShopMainPage && (
-        <div className="grid auto-rows-fr grid-cols-2 gap-2 md:auto-rows-35rem md:grid-cols-4">
+        <div className="grid auto-rows-fr grid-cols-2 gap-2 md:auto-rows-35rem md:grid-cols-4 lg:grid-cols-6">
           {shopItems
             .filter((item) => {
               const noCategoriesSelected = Object.values(
@@ -109,13 +108,14 @@ export default function Shop() {
                   key={item.id}
                   item={item}
                   isMobile={isMobile}
+                  isLaptop={isLaptop}
                   updateCart={updateCart}
                 />
               );
             })}
         </div>
       )}
-      <Outlet context={{ shopItems, updateCart }} />
+      <Outlet context={{ shopItems, updateCart, isMobile }} />
     </div>
   );
 }

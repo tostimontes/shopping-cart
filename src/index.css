@@ -1,3 +1,36 @@
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
+
+@layer utilities {
+  * {
+    ::-webkit-scrollbar {
+      width: 10px;
+      opacity: 0;
+    }
+    /* Hide scrollbar for Firefox */
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+  }
+
+  *:hover {
+    ::-webkit-scrollbar {
+      opacity: 1;
+    }
+    /* Show scrollbar on hover for Firefox */
+    scrollbar-color: #888 #f1f1f1;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 5px;
+  }
+
+  *::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+}

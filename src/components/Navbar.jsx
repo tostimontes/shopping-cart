@@ -9,6 +9,7 @@ export default function Navbar({
   cartItems,
   handleUpdateCart,
   isMobile,
+  isLaptop,
   handleItemQuantityUpdate,
   itemQuantities,
   shopItems,
@@ -43,7 +44,6 @@ export default function Navbar({
       setLastScrollY(currentScrollY);
     };
 
-    // Listen for scroll events
     window.addEventListener('scroll', handleScroll, { passive: true });
 
     return () => {
@@ -75,6 +75,12 @@ export default function Navbar({
     };
   }, []);
 
+  useEffect(() => {
+    if (isSearchOpen) {
+      searchInput.current.focus();
+    }
+  }, [isSearchOpen]);
+
   const handleInputChange = (e) => {
     setSearchQuery(e.target.value);
     handleSearch(e.target.value);
@@ -86,14 +92,26 @@ export default function Navbar({
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
+    if (!isSidebarOpen) {
+      setIsSearchOpen(false);
+      setIsCartOpen(false);
+    }
   };
 
   const toggleCart = () => {
     setIsCartOpen(!isCartOpen);
+    if (!isCartOpen) {
+      setIsSearchOpen(false);
+      setIsSidebarOpen(false);
+    }
   };
 
   const toggleSearch = () => {
     setIsSearchOpen(!isSearchOpen);
+    if (!isSearchOpen) {
+      setIsSidebarOpen(false);
+      setIsCartOpen(false);
+    }
   };
 
   const highlightMatch = (text, query) => {
@@ -112,55 +130,64 @@ export default function Navbar({
   return (
     <>
       <nav
-        className={`${showNavbar ? 'top-0' : '-top-16'} transition-top sticky z-20 flex h-16 w-full items-center justify-around bg-orange-700 p-4 text-yellow-100 duration-300 ease-in-out`}
+        className={`${showNavbar ? 'top-0' : '-top-16 md:-top-20'} transition-top sticky z-20 flex h-16  w-full items-center justify-around bg-orange-700 p-4 text-yellow-100 duration-300 ease-in-out md:h-20 lg:mx-auto lg:justify-center lg:gap-36 xl:gap-48`}
       >
         <button type="button" onClick={toggleSidebar} ref={sidebarButton}>
-          <Icon path={isSidebarOpen ? mdiClose : mdiMenu} size={1} />
+          <Icon
+            path={isSidebarOpen ? mdiClose : mdiMenu}
+            className="size-8 md:size-10"
+          />
         </button>
-        <Icon path={mdiClose} size={1} className="hidden" />
-        <Icon path={mdiMagnify} size={1} onClick={toggleSearch} />
+        <Icon
+          path={isSearchOpen ? mdiClose : mdiMagnify}
+          onClick={toggleSearch}
+          className="size-8 md:size-10"
+        />
         <input
           ref={searchInput}
-          autoFocus={true}
           type="text"
           placeholder="Search"
-          className={`${isSearchOpen ? 'block' : 'hidden'} flex rounded-full px-4 py-2 text-gray-900 focus:outline-none`}
+          className={`${isSearchOpen ? 'block' : 'hidden'} flex rounded-full px-4 py-2 text-gray-900 focus:outline-none md:w-3/6`}
           value={searchQuery}
           onChange={handleInputChange}
         />
         {isSearchOpen && searchQuery !== '' && (
-          <ul className="search-results absolute top-16 flex max-h-96 w-3/5 flex-col gap-2 overflow-scroll bg-yellow-50 p-2 text-black shadow-xl">
-            {searchResults.map((item) => (
-              <li key={item.id}>
-                <Link
-                  to={`/shop/${item.id}`}
-                  className="flex items-center gap-2 rounded-lg bg-gray-50 p-2 hover:bg-gray-100"
-                  onClick={toggleSearch}
-                >
-                  <img
-                    src={item.image}
-                    alt={item.title}
-                    className="w-1/6 object-contain"
-                  />
-                  <h3 className="w-5/6">
-                    {highlightMatch(item.title, searchQuery)}
-                  </h3>
-                </Link>
-              </li>
-            ))}
+          <ul className="search-results absolute top-16  flex max-h-96 w-3/5 flex-col gap-2 overflow-y-auto bg-yellow-50 p-2 text-black shadow-xl md:top-20">
+            {searchResults.length > 0 ? (
+              searchResults.map((item) => (
+                <li key={item.id}>
+                  <Link
+                    to={`/shop/${item.id}`}
+                    className="flex items-center gap-2 rounded-lg bg-gray-50 p-2 hover:bg-gray-100"
+                    onClick={toggleSearch}
+                  >
+                    <img
+                      src={item.image}
+                      alt={item.title}
+                      className="w-1/6 object-contain"
+                    />
+                    <h3 className="w-5/6">
+                      {highlightMatch(item.title, searchQuery)}
+                    </h3>
+                  </Link>
+                </li>
+              ))
+            ) : (
+              <li className="text-xl md:text-2xl">No results found</li>
+            )}
           </ul>
         )}
         <Link to={'/home'} className={`${isSearchOpen ? 'hidden' : 'block'}`}>
-          <h1 className="text-4xl text-yellow-300 ">AliBrava</h1>
+          <h1 className="text-4xl text-yellow-300 md:text-5xl ">AliBrava</h1>
         </Link>
-        <Icon path={mdiAccount} size={1} />
+        <Icon path={mdiAccount} className="size-8 md:size-10" />
         <button
           type="button"
           onClick={toggleCart}
           ref={cartButton}
           className="relative"
         >
-          <Icon path={mdiCart} size={1} />
+          <Icon path={mdiCart} className="size-8 md:size-10" />
           {totalItemsInCart > 0 && (
             <div className="absolute -right-3 -top-3 flex size-4 items-center justify-center rounded-full bg-yellow-300 p-3  text-black">
               {totalItemsInCart}

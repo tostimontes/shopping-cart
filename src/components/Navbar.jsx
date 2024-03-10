@@ -15,7 +15,6 @@ export default function Navbar({
   handleSearch,
   searchResults,
 }) {
-
   const [searchQuery, setSearchQuery] = useState('');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -27,6 +26,7 @@ export default function Navbar({
   const sidebarButton = useRef();
   const cart = useRef();
   const cartButton = useRef();
+  const searchInput = useRef();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -120,19 +120,31 @@ export default function Navbar({
         <Icon path={mdiClose} size={1} className="hidden" />
         <Icon path={mdiMagnify} size={1} onClick={toggleSearch} />
         <input
+          ref={searchInput}
+          autoFocus={true}
           type="text"
           placeholder="Search"
-          className={`${isSearchOpen ? 'block' : 'hidden'} flex rounded-full px-4 py-2 text-gray-900`}
+          className={`${isSearchOpen ? 'block' : 'hidden'} flex rounded-full px-4 py-2 text-gray-900 focus:outline-none`}
           value={searchQuery}
           onChange={handleInputChange}
         />
-        {isSearchOpen && (
-          <ul className="search-results absolute top-16 flex w-3/5 flex-col gap-4 bg-yellow-50 p-2 text-black">
+        {isSearchOpen && searchQuery !== '' && (
+          <ul className="search-results absolute top-16 flex max-h-96 w-3/5 flex-col gap-2 overflow-scroll bg-yellow-50 p-2 text-black shadow-xl">
             {searchResults.map((item) => (
-              <li key={item.id} className="flex gap-2">
-                <Link to={`/shop/${item.id}`}>
-                  <img src={item.image} alt={item.title} className="w-1/6" />
-                  <h3>{highlightMatch(item.title, searchQuery)}</h3>
+              <li key={item.id}>
+                <Link
+                  to={`/shop/${item.id}`}
+                  className="flex items-center gap-2 rounded-lg bg-gray-50 p-2 hover:bg-gray-100"
+                  onClick={toggleSearch}
+                >
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    className="w-1/6 object-contain"
+                  />
+                  <h3 className="w-5/6">
+                    {highlightMatch(item.title, searchQuery)}
+                  </h3>
                 </Link>
               </li>
             ))}

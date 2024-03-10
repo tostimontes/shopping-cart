@@ -27,15 +27,16 @@ const Sidebar = forwardRef(({ open, shopItems, toggleSidebar }, ref) => {
         ref={ref}
         className={`${open ? 'z-10 scale-100 opacity-100' : '-z-10 scale-95 opacity-0'} fixed left-0 top-16 h-full w-3/4 origin-top-left bg-yellow-200 p-4 transition-opacity transition-transform duration-300 ease-out`}
       >
-        <ul>
+        <ul className='flex flex-col gap-6'>
           {[...categories].map((category) => {
             return (
               <Link
                 to={`/shop?category=${category}`}
                 key={category}
                 onClick={toggleSidebar}
+                className='text-2xl hover:bg-gray-50 rounded-xl'
               >
-                <li>{toTitleCase(category)}</li>
+                <li>&gt; {toTitleCase(category)}</li>
               </Link>
             );
           })}

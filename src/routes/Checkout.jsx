@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-key */
 import { useOutletContext, useParams, Link } from 'react-router-dom';
 import Button from '../components/Button';
-import { mdiCart, mdiCash, mdiTrashCanOutline } from '@mdi/js';
+import { mdiCart, mdiCash, mdiShopping, mdiTrashCanOutline } from '@mdi/js';
 import { useState } from 'react';
 import useItemQuantity from '../hooks/useItemQuantity';
 
@@ -47,8 +47,8 @@ export default function Checkout() {
     <div className="flex min-h-screen w-full flex-col items-center gap-2 p-4">
       <h2 className="text-center text-5xl">Cart</h2>
       {cartItems.length > 0 && (
-        <div className='flex gap-2'>
-          <p className='text-2xl'>Total:</p>
+        <div className="flex gap-2">
+          <p className="text-2xl">Total:</p>
           <p className="text-2xl font-bold">
             {` ${cartItems
               .reduce((total, currentItem) => {
@@ -63,32 +63,34 @@ export default function Checkout() {
         <>
           {cartItems.map((item) => {
             return (
-              <div className="flex bg-yellow-50">
-                <Link to={`/shop/${item.id}`} className="h-3/5">
+              <div className="flex w-full items-center gap-2 rounded-lg bg-yellow-50 p-2">
+                <Link to={`/shop/${item.id}`} className="w-1/5">
                   <img
-                    className="w-16 object-contain"
+                    className="object-contain"
                     src={item.image}
                     alt={item.title}
                   />
                 </Link>
-                <div className="flex h-full flex-col">
+                <div className="flex h-full w-4/5 flex-col">
                   <Link
                     to={`/shop/${item.id}`}
                     className="flex h-4/5 flex-col gap-2"
                   >
-                    <p className="italic">{item.price}€</p>
                     <h3 className="overflow-scroll text-lg font-bold">
                       {item.title}
                     </h3>
+                    <p className="place-self-end text-2xl italic">
+                      {item.price}€
+                    </p>
                     <p className="hidden overflow-scroll lg:block">
                       {item.description}
                     </p>
                   </Link>
-                  <div className="flex h-1/5 items-center gap-2 place-self-end">
+                  <div className="flex h-1/5 items-center justify-end gap-2 ">
                     {updatedItems[item.id] && (
                       <Button
                         onClick={() => handleSaveChanges(item.id)}
-                        text="Save Changes"
+                        text={isMobile ? 'Save' : 'Save Changes'}
                       />
                     )}
                     <Button
@@ -98,7 +100,7 @@ export default function Checkout() {
                     />
                     <input
                       type="number"
-                      className="flex size-8 items-center border border-gray-900 p-2"
+                      className="flex w-12 items-center justify-center border border-gray-900 p-2 text-center"
                       value={itemQuantities[item.id]}
                       onChange={(e) =>
                         updateItemQuantity(
@@ -139,7 +141,13 @@ export default function Checkout() {
       ) : (
         <>
           <p>Your cart is empty!</p>
-          <Link to={'/shop'}>Shop now!</Link>
+          <Link to={'/shop'}>
+            <Button
+              text={'Shop now!'}
+              iconPath={mdiShopping}
+              className="flex items-center gap-2"
+            />
+          </Link>
         </>
       )}
     </div>

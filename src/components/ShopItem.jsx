@@ -41,7 +41,7 @@ const ShopItem = ({ item, isMobile, updateCart }) => {
           />
           <input
             type="number"
-            className="flex size-8 items-center border border-gray-900 p-2"
+            className="flex w-10 items-center border border-gray-900 p-2 text-center"
             value={inputValue}
             onChange={handleQuantityChange}
             onBlur={handleBlur}

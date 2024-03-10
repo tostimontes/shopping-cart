@@ -1,10 +1,7 @@
 import { useEffect, useState } from 'react';
 import Navbar from './components/Navbar';
-import Sidebar from './components/Sidebar';
-import Home from './routes/Home';
 import Contact from './components/Contact';
-import Shop from './routes/Shop';
-import { Link, Outlet } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import fakeResponse from './fakeResponse';
 
 function App() {

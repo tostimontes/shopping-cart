@@ -21,21 +21,23 @@ const ItemDetail = () => {
   };
 
   const item = shopItems.find((item) => item.id === parseInt(itemId));
-  // ... Render item details ...
+
   if (item) {
     return (
-      <div className="flex w-full flex-col justify-between bg-white p-2">
+      <div className="flex w-full flex-col justify-between gap-2 rounded-xl bg-white p-4 shadow-md">
         <img
-          className="h-full object-contain"
+          className="h-full rounded-xl object-contain "
           src={item.image}
           alt={item.title}
         />
-
-        <div className="flex h-2/5 flex-col text-2xl">
-          <Link to={`/shop/${item.id}`} className="flex h-4/5 flex-col gap-2">
-            <p className="italic">{item.price}€</p>
+        <div className="flex h-2/5 flex-col rounded-lg text-2xl">
+          <Link
+            to={`/shop/${item.id}`}
+            className="flex h-4/5 flex-col gap-2 pb-4"
+          >
             <h3 className="overflow-scroll font-bold">{item.title}</h3>
             <p className="py-4 text-xl">{item.description}</p>
+            <p className="text-3xl italic">{item.price}€</p>
           </Link>
           <div className="flex h-1/5 items-center gap-2 place-self-end text-3xl">
             <Button
@@ -45,7 +47,7 @@ const ItemDetail = () => {
             />
             <input
               type="number"
-              className="flex size-8 items-center border border-gray-900 p-2"
+              className="flex w-12 items-center border border-gray-900 p-2 text-center"
               value={inputValue}
               onChange={handleQuantityChange}
               onBlur={handleBlur}

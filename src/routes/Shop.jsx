@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import ShopItem from '../components/ShopItem';
-import { Outlet, useLocation, useOutletContext } from 'react-router-dom';
+import { Link, Outlet, useLocation, useOutletContext } from 'react-router-dom';
 import Button from '../components/Button';
-import { mdiFilter } from '@mdi/js';
+import { mdiChevronDoubleLeft, mdiFilter } from '@mdi/js';
 
 // TODO: use a react router loader for the prefetch
 
@@ -57,13 +57,19 @@ export default function Shop() {
           Failed to load products. Please try again later.
         </p>
       )}
-      <div className="fixed top-20 mt-2">
-        <Button
-          onClick={toggleFilters}
-          className="filters-toggle-button"
-          iconPath={mdiFilter}
-          text={filtersVisible ? 'Hide Filters' : 'Show Filters'}
-        ></Button>
+      <div className={`${isShopMainPage ? 'fixed' : 'absolute'} top-20 mt-2`}>
+        {isShopMainPage ? (
+          <Button
+            onClick={toggleFilters}
+            className="filters-toggle-button"
+            iconPath={mdiFilter}
+            text={filtersVisible ? 'Hide Filters' : 'Show Filters'}
+          ></Button>
+        ) : (
+          <Link to={'/shop'} className="">
+            <Button text={'Back to shop'} iconPath={mdiChevronDoubleLeft} />
+          </Link>
+        )}
 
         {filtersVisible && (
           <>

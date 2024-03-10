@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-key */
 import { useOutletContext, useParams, Link } from 'react-router-dom';
 import Button from '../components/Button';
-import { mdiCart, mdiTrashCanOutline } from '@mdi/js';
+import { mdiCart, mdiCash, mdiTrashCanOutline } from '@mdi/js';
 import { useState } from 'react';
 import useItemQuantity from '../hooks/useItemQuantity';
 
@@ -45,15 +45,18 @@ export default function Checkout() {
 
   return (
     <div className="flex min-h-screen w-full flex-col items-center gap-2 p-4">
-      <h2 className="text-center text-4xl">Cart</h2>
+      <h2 className="text-center text-5xl">Cart</h2>
       {cartItems.length > 0 && (
-        <p>
-          {`Total: ${cartItems
-            .reduce((total, currentItem) => {
-              return total + currentItem.price * currentItem.quantity;
-            }, 0)
-            .toFixed(2)}€`}
-        </p>
+        <div className='flex gap-2'>
+          <p className='text-2xl'>Total:</p>
+          <p className="text-2xl font-bold">
+            {` ${cartItems
+              .reduce((total, currentItem) => {
+                return total + currentItem.price * currentItem.quantity;
+              }, 0)
+              .toFixed(2)}€`}
+          </p>
+        </div>
       )}
 
       {cartItems.length > 0 ? (
@@ -122,10 +125,15 @@ export default function Checkout() {
             );
           })}
           <Link to={'/shop'} className="">
-            Continue shopping
+            <Button text={'Continue shopping'} />
           </Link>
           <div onClick={() => alert(`You ain't got no money for this`)}>
-            Pay now
+            <Button
+              text={'Pay now'}
+              iconPath={mdiCash}
+              size={2}
+              className="gap-2 bg-orange-600 p-3 text-4xl"
+            />
           </div>
         </>
       ) : (

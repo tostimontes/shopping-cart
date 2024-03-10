@@ -12,12 +12,13 @@ export default function Navbar({
   handleItemQuantityUpdate,
   itemQuantities,
   shopItems,
+  handleSearch,
+  searchResults,
 }) {
-  // TODO: the search icon should open a fuzzy search bar with highlighting
-  //   TODO: cart icon should open cart on same page until go to checkout
-  // ! TODO: sidebar like cart and carte checkout route
 
+  const [searchQuery, setSearchQuery] = useState('');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [showNavbar, setShowNavbar] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
@@ -74,6 +75,11 @@ export default function Navbar({
     };
   }, []);
 
+  const handleInputChange = (e) => {
+    setSearchQuery(e.target.value);
+    handleSearch(e.target.value);
+  };
+
   const totalItemsInCart = cartItems.reduce((totalItems, curr) => {
     return (totalItems += curr.quantity);
   }, 0);
@@ -86,6 +92,23 @@ export default function Navbar({
     setIsCartOpen(!isCartOpen);
   };
 
+  const toggleSearch = () => {
+    setIsSearchOpen(!isSearchOpen);
+  };
+
+  const highlightMatch = (text, query) => {
+    const regex = new RegExp(`(${query})`, 'gi');
+    const parts = text.split(regex);
+
+    return parts.map((part, index) => {
+      if (part.toLowerCase() === query.toLowerCase()) {
+        return <mark key={index}>{part}</mark>;
+      } else {
+        return part;
+      }
+    });
+  };
+
   return (
     <>
       <nav
@@ -95,12 +118,27 @@ export default function Navbar({
           <Icon path={isSidebarOpen ? mdiClose : mdiMenu} size={1} />
         </button>
         <Icon path={mdiClose} size={1} className="hidden" />
-        <Icon path={mdiMagnify} size={1} />
+        <Icon path={mdiMagnify} size={1} onClick={toggleSearch} />
         <input
           type="text"
-          className="hidden rounded-xl px-2 py-1 text-gray-950"
+          placeholder="Search"
+          className={`${isSearchOpen ? 'block' : 'hidden'} flex rounded-full px-4 py-2 text-gray-900`}
+          value={searchQuery}
+          onChange={handleInputChange}
         />
-        <Link to={'/home'}>
+        {isSearchOpen && (
+          <ul className="search-results absolute top-16 flex w-3/5 flex-col gap-4 bg-yellow-50 p-2 text-black">
+            {searchResults.map((item) => (
+              <li key={item.id} className="flex gap-2">
+                <Link to={`/shop/${item.id}`}>
+                  <img src={item.image} alt={item.title} className="w-1/6" />
+                  <h3>{highlightMatch(item.title, searchQuery)}</h3>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
+        <Link to={'/home'} className={`${isSearchOpen ? 'hidden' : 'block'}`}>
           <h1 className="text-4xl text-yellow-300 ">AliBrava</h1>
         </Link>
         <Icon path={mdiAccount} size={1} />
@@ -118,7 +156,12 @@ export default function Navbar({
           )}
         </button>
       </nav>
-      <Sidebar open={isSidebarOpen} ref={sidebar} shopItems={shopItems} toggleSidebar={toggleSidebar} />
+      <Sidebar
+        open={isSidebarOpen}
+        ref={sidebar}
+        shopItems={shopItems}
+        toggleSidebar={toggleSidebar}
+      />
       <CartSidebar
         open={isCartOpen}
         ref={cart}

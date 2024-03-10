@@ -22,6 +22,9 @@ function App() {
 
   const [shopItems, setShopItems] = useState([]);
   const [fetchError, setFetchError] = useState(false);
+
+  const [searchResults, setSearchResults] = useState([]);
+
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -81,6 +84,17 @@ function App() {
     });
   };
 
+  const handleSearch = (query) => {
+    if (!query) {
+      setSearchResults([]);
+      return;
+    }
+    const results = shopItems.filter((item) =>
+      item.title.toLowerCase().includes(query.toLowerCase()),
+    );
+    setSearchResults(results);
+  };
+
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 1024);
@@ -102,6 +116,8 @@ function App() {
         itemQuantities={itemQuantities}
         handleItemQuantityUpdate={updateItemQuantity}
         shopItems={shopItems}
+        handleSearch={handleSearch}
+        searchResults={searchResults}
       />
       <main className="h-full w-full flex-col gap-8 bg-yellow-100">
         <Outlet

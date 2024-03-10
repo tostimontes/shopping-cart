@@ -4,11 +4,8 @@ import { forwardRef, useState } from 'react';
 import Button from './Button';
 import { Link } from 'react-router-dom';
 import useItemQuantity from '../hooks/useItemQuantity';
-import { mdiTrashCanOutline } from '@mdi/js';
+import { mdiCartCheck, mdiTrashCanOutline } from '@mdi/js';
 
-// TODO: buttons should update state in App
-// TODO: calculate totals here, in checkout etc
-// TODO: decrementing to less than 1 removes item
 
 const CartSidebar = forwardRef(
   (
@@ -137,10 +134,14 @@ const CartSidebar = forwardRef(
                   .toFixed(2)}€`}
               </p>
               <Link onClick={handleToggleCart} to={'/shop'} className="">
-                Continue shopping
+                <Button text={'Continue shopping'} />
               </Link>
               <Link onClick={handleToggleCart} to={'/checkout'}>
-                Checkout
+                <Button
+                  text={'Checkout'.toUpperCase()}
+                  iconPath={mdiCartCheck}
+                  className="bg-orange-600 text-2xl font-bold"
+                />
               </Link>
             </div>
           ) : (

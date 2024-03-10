@@ -1,8 +1,9 @@
 /* eslint-disable react/display-name */
 /* eslint-disable react/jsx-key */
 import { forwardRef } from 'react';
+import { Link } from 'react-router-dom';
 
-const Sidebar = forwardRef(({ open, shopItems }, ref) => {
+const Sidebar = forwardRef(({ open, shopItems, toggleSidebar }, ref) => {
   const toTitleCase = (str) => {
     return str
       .toLowerCase()
@@ -28,7 +29,15 @@ const Sidebar = forwardRef(({ open, shopItems }, ref) => {
       >
         <ul>
           {[...categories].map((category) => {
-            return <li key={category}>{toTitleCase(category)}</li>;
+            return (
+              <Link
+                to={`/shop?category=${category}`}
+                key={category}
+                onClick={toggleSidebar}
+              >
+                <li>{toTitleCase(category)}</li>
+              </Link>
+            );
           })}
         </ul>
       </aside>

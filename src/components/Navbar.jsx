@@ -118,7 +118,7 @@ export default function Navbar({
           )}
         </button>
       </nav>
-      <Sidebar open={isSidebarOpen} ref={sidebar} shopItems={shopItems} />
+      <Sidebar open={isSidebarOpen} ref={sidebar} shopItems={shopItems} toggleSidebar={toggleSidebar} />
       <CartSidebar
         open={isCartOpen}
         ref={cart}

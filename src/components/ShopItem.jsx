@@ -7,6 +7,8 @@ import useItemQuantity from '../hooks/useItemQuantity';
 const ShopItem = ({ item, isMobile, updateCart }) => {
   const {
     quantity,
+    handleBlur,
+    inputValue,
     handleQuantityChange,
     incrementQuantity,
     decrementQuantity,
@@ -40,8 +42,9 @@ const ShopItem = ({ item, isMobile, updateCart }) => {
           <input
             type="number"
             className="flex size-8 items-center border border-gray-900 p-2"
-            value={quantity}
+            value={inputValue}
             onChange={handleQuantityChange}
+            onBlur={handleBlur}
             min={1}
             max={100}
           />
@@ -53,7 +56,7 @@ const ShopItem = ({ item, isMobile, updateCart }) => {
           <Button
             text={!isMobile && 'Add to cart'}
             iconPath={mdiCart}
-            onClick={() => handleUpdateCart(item, quantity)}
+            onClick={() => handleUpdateCart(item, parseInt(inputValue))}
           />
         </div>
       </div>

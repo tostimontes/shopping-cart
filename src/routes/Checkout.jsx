@@ -124,6 +124,9 @@ export default function Checkout() {
           <Link to={'/shop'} className="">
             Continue shopping
           </Link>
+          <div onClick={() => alert(`You ain't got no money for this`)}>
+            Pay now
+          </div>
         </>
       ) : (
         <>

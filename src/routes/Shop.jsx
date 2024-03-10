@@ -1,35 +1,15 @@
 import { useEffect, useState } from 'react';
 import ShopItem from '../components/ShopItem';
-import fakeResponse from '../fakeResponse';
 import { Outlet, useLocation, useOutletContext } from 'react-router-dom';
 
 // TODO: use a react router loader for the prefetch
 
 export default function Shop() {
-  const [items, setItems] = useState([]);
-  const [fetchError, setFetchError] = useState(false);
+
   const location = useLocation();
   const isShopMainPage = location.pathname === '/shop';
-  const { updateCart, isMobile } = useOutletContext();
+  const { updateCart, isMobile, shopItems, fetchError } = useOutletContext();
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const data = await (
-          await fetch('https://fakestoreapi.com/products/')
-        ).json();
-
-        setItems(data);
-        setFetchError(false); // Reset error state on successful fetch
-      } catch (error) {
-        console.error('Failed to fetch products:', error);
-        setFetchError(true);
-        setItems(fakeResponse);
-      }
-    };
-
-    fetchProducts();
-  }, []);
 
   return (
     <div className="flex w-full flex-col p-4">
@@ -41,7 +21,7 @@ export default function Shop() {
       )}
       {isShopMainPage && (
         <div className="md:auto-rows-35rem grid auto-rows-fr grid-cols-2 gap-2 md:grid-cols-4">
-          {items.map((item) => {
+          {shopItems.map((item) => {
             return (
               <ShopItem
                 key={item.id}
@@ -53,7 +33,7 @@ export default function Shop() {
           })}
         </div>
       )}
-      <Outlet context={{ items, updateCart }} />
+      <Outlet context={{ shopItems, updateCart }} />
     </div>
   );
 }

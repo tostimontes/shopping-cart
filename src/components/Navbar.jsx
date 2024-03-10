@@ -10,7 +10,8 @@ export default function Navbar({
   handleUpdateCart,
   isMobile,
   handleItemQuantityUpdate,
-  itemQuantities
+  itemQuantities,
+  shopItems,
 }) {
   // TODO: the search icon should open a fuzzy search bar with highlighting
   //   TODO: cart icon should open cart on same page until go to checkout
@@ -117,7 +118,7 @@ export default function Navbar({
           )}
         </button>
       </nav>
-      <Sidebar open={isSidebarOpen} ref={sidebar} />
+      <Sidebar open={isSidebarOpen} ref={sidebar} shopItems={shopItems} />
       <CartSidebar
         open={isCartOpen}
         ref={cart}

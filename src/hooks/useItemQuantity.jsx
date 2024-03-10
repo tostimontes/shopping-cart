@@ -2,22 +2,40 @@ import { useState } from 'react';
 
 const useItemQuantity = (initialQuantity = 1) => {
   const [quantity, setQuantity] = useState(initialQuantity);
+  const [inputValue, setInputValue] = useState(initialQuantity.toString());
 
   const handleQuantityChange = (event) => {
-    setQuantity(Math.max(1, Math.min(Number(event.target.value), 100)));
+    const value = event.target.value;
+    setInputValue(value);
+    if (value === '') return;
+    setQuantity(Math.max(1, Math.min(Number(value), 100)));
+  };
+
+  const handleBlur = () => {
+    if (inputValue === '') {
+      setInputValue(quantity.toString());
+    } else {
+      setQuantity(Math.max(1, Math.min(Number(inputValue), 100)));
+    }
   };
 
   const incrementQuantity = () => {
-    setQuantity((prevQuantity) => Math.min(prevQuantity + 1, 100));
+    const newQuantity = Math.min(quantity + 1, 100);
+    setQuantity(newQuantity);
+    setInputValue(newQuantity.toString());
   };
 
   const decrementQuantity = () => {
-    setQuantity((prevQuantity) => Math.max(prevQuantity - 1, 1));
+    const newQuantity = Math.max(quantity - 1, 1);
+    setQuantity(newQuantity);
+    setInputValue(newQuantity.toString());
   };
 
   return {
     quantity,
+    inputValue,
     handleQuantityChange,
+    handleBlur,
     incrementQuantity,
     decrementQuantity,
   };

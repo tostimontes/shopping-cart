@@ -6,19 +6,21 @@ import { mdiCart } from '@mdi/js';
 import useItemQuantity from '../hooks/useItemQuantity';
 
 const ItemDetail = () => {
-  const { items, addToCart } = useOutletContext();
+  const { shopItems, updateCart } = useOutletContext();
   const { itemId } = useParams();
   const {
     quantity,
+    handleBlur,
+    inputValue,
     handleQuantityChange,
     incrementQuantity,
     decrementQuantity,
   } = useItemQuantity();
   const handleAddToCart = (item, quantity) => {
-    addToCart(item, quantity);
+    updateCart(item, quantity);
   };
 
-  const item = items.find((item) => item.id === parseInt(itemId));
+  const item = shopItems.find((item) => item.id === parseInt(itemId));
   // ... Render item details ...
   if (item) {
     return (
@@ -44,8 +46,9 @@ const ItemDetail = () => {
             <input
               type="number"
               className="flex size-8 items-center border border-gray-900 p-2"
-              value={itemQuantity}
+              value={inputValue}
               onChange={handleQuantityChange}
+              onBlur={handleBlur}
               min={1}
               max={100}
             />
@@ -56,7 +59,7 @@ const ItemDetail = () => {
             />
             <Button
               text="Add to cart"
-              onClick={() => handleAddToCart(item, itemQuantity)}
+              onClick={() => handleAddToCart(item, parseInt(inputValue))}
               iconPath={mdiCart}
             />
           </div>

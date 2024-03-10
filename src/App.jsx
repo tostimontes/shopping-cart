@@ -5,20 +5,54 @@ import Home from './routes/Home';
 import Contact from './components/Contact';
 import Shop from './routes/Shop';
 import { Link, Outlet } from 'react-router-dom';
-
-// TODO: edit and remove quantity
+import fakeResponse from './fakeResponse';
 
 function App() {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
   const [cartItems, setCartItems] = useState(
     JSON.parse(localStorage.getItem('cartItems')) || [],
   );
-  const [itemQuantities, setItemQuantities] = useState(() =>
-    cartItems.reduce((acc, item) => ({ ...acc, [item.id]: item.quantity }), {}),
+
+  const [itemQuantities, setItemQuantities] = useState(
+    cartItems.reduce(
+      (acc, item) => ({ ...acc, [item.id]: item.quantity }),
+      {},
+    ) || {},
   );
+
+  const [shopItems, setShopItems] = useState([]);
+  const [fetchError, setFetchError] = useState(false);
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const data = await (
+          await fetch('https://fakestoreapi.com/products/')
+        ).json();
+
+        setShopItems(data);
+        setFetchError(false); // Reset error state on successful fetch
+      } catch (error) {
+        console.error('Failed to fetch products:', error);
+        setFetchError(true);
+        setShopItems(fakeResponse);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('itemQuantities', JSON.stringify(itemQuantities));
+  }, [itemQuantities]);
 
   useEffect(() => {
     localStorage.setItem('cartItems', JSON.stringify(cartItems));
+    setItemQuantities(
+      cartItems.reduce(
+        (acc, item) => ({ ...acc, [item.id]: item.quantity }),
+        {},
+      ),
+    );
   }, [cartItems]);
 
   const updateItemQuantity = (itemId, newQuantity) => {
@@ -67,6 +101,7 @@ function App() {
         isMobile={isMobile}
         itemQuantities={itemQuantities}
         handleItemQuantityUpdate={updateItemQuantity}
+        shopItems={shopItems}
       />
       <main className="h-full w-full flex-col gap-8 bg-yellow-100">
         <Outlet
@@ -76,6 +111,8 @@ function App() {
             isMobile,
             itemQuantities,
             updateItemQuantity,
+            shopItems,
+            fetchError,
           }}
         />
       </main>
